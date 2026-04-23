@@ -5,7 +5,7 @@ import { COLORS, FONTS } from "../lib/constants";
 const lines: Array<{ text: string; color: string; size: number; weight: number }> = [
   { text: "213 cards · 61 hidden gems", color: COLORS.accentYellow, size: 48, weight: 700 },
   { text: "See the full list on Medium →", color: COLORS.fg, size: 38, weight: 600 },
-  { text: "pokemon-brain.pages.dev", color: COLORS.fgDim, size: 28, weight: 500 },
+  { text: "pokemon.eliseorobles.com", color: COLORS.fgDim, size: 28, weight: 500 },
 ];
 
 export const CTA: React.FC = () => {

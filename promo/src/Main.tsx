@@ -17,6 +17,7 @@ import { CardReel } from "./scenes/CardReel";
 import { StatReveal } from "./scenes/StatReveal";
 import { TopRegion } from "./scenes/TopRegion";
 import { CTA } from "./scenes/CTA";
+import { Watermark } from "./components/Watermark";
 
 export type MainProps = {
   orientation: Orientation;
@@ -67,6 +68,9 @@ export const Main: React.FC<MainProps> = ({ orientation }) => {
           </Series.Sequence>
         </Series>
       </AbsoluteFill>
+
+      {/* Persistent watermark — over every scene, discourages casual reupload */}
+      <Watermark orientation={orientation} />
     </AbsoluteFill>
   );
 };
