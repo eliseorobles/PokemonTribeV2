@@ -1,0 +1,9 @@
+node_modules/
+# Keep out/*.mp4 committed — they're the portfolio deliverable.
+out/*.jpg
+public/cards/*
+public/heatmaps/*
+public/stats/*
+public/stats.json
+!public/.gitkeep
+.DS_Store

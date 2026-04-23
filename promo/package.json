@@ -1,0 +1,26 @@
+{
+  "name": "pokemon-brain-promo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Promo video for the Pokemon brain experiment — silent + captions, vertical + square.",
+  "scripts": {
+    "dev": "remotion studio",
+    "prep": "python3 scripts/prep_assets.py",
+    "render:vert": "remotion render src/index.ts Main out/promo-vertical-1080x1920.mp4 --props=\"{\\\"orientation\\\":\\\"vertical\\\"}\" --overwrite",
+    "render:sq": "remotion render src/index.ts Main out/promo-square-1080x1080.mp4 --props=\"{\\\"orientation\\\":\\\"square\\\"}\" --overwrite",
+    "render:all": "npm run render:vert && npm run render:sq"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.300",
+    "@remotion/cli": "^4.0.300",
+    "@remotion/renderer": "^4.0.300",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.300"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.6.0"
+  }
+}

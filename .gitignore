@@ -1,0 +1,57 @@
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+env/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- IDE / tooling ---
+.vscode/
+.idea/
+.claude/
+.playwright/
+.playwright-mcp/
+
+# --- Meta's TRIBE v2 source ---
+# Clone separately: `git clone https://github.com/facebookresearch/tribev2.git`
+tribev2/
+
+# --- HuggingFace / model caches (~GB) ---
+cache/
+tribe_cache/
+
+# --- Scraped portfolio + sensitive session state ---
+data/storage_state.json
+data/page.html
+data/raw_xhrs.json
+data/final_url.txt
+
+# --- Large generated artifacts (regenerate via `make all`) ---
+data/cards/*
+data/image_videos/*
+data/brain/*
+!data/.gitkeep
+
+# --- Generated site (rebuild via `make site`) ---
+site/index.html
+site/assets/cards/*
+site/assets/heatmaps/*
+site/assets/roi_correlation.png
+
+# --- Remotion promo project ---
+promo/node_modules/
+promo/public/cards/*
+promo/public/heatmaps/*
+promo/public/stats/*
+promo/public/stats.json
+
+# --- Temporary / debug ---
+*.log
+*.tmp
