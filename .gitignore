@@ -52,6 +52,9 @@ promo/public/heatmaps/*
 promo/public/stats/*
 promo/public/stats.json
 
+# --- Drafts (kept local, not published in repo) ---
+posts/
+
 # --- Temporary / debug ---
 *.log
 *.tmp
