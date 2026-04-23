@@ -55,6 +55,11 @@ promo/public/stats.json
 # --- Drafts (kept local, not published in repo) ---
 posts/
 
+# --- Personal audio asset (copyright) ---
+*.mp3
+# Keep copyrighted-audio renders out of the public repo; ship the silent cuts only.
+promo/out/*-audio.mp4
+
 # --- Temporary / debug ---
 *.log
 *.tmp
