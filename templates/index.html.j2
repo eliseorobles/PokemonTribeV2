@@ -63,7 +63,29 @@
 
   .roi-overlay-img { width: 100%; max-width: 760px; border-radius: 8px; background: white; }
 
-  /* Cards grid */
+  /* Cards grid + sort controls */
+  .sort-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    align-items: center;
+    margin: 0.75rem 0 1.25rem;
+    font-family: var(--mono);
+  }
+  .sort-bar .lbl { color: var(--fg-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; margin-right: 0.5rem; }
+  .sort-btn {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .sort-btn:hover { color: var(--fg); border-color: var(--fg-muted); }
+  .sort-btn.active { background: var(--accent-yellow); color: var(--bg); border-color: var(--accent-yellow); font-weight: 700; }
   .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; }
   .card {
     background: var(--bg-elev);
@@ -288,9 +310,22 @@
 <section>
   <h2>Every card, ranked by brain-vs-market disagreement</h2>
   <p class="thesis">Each card shows its market rank (1 = most expensive of {{ n_total }}) and how the brain ranks it. The corner badge is the rank delta — positive (green) means the brain likes this card more than the market does.</p>
-  <div class="cards-grid">
+  <div class="sort-bar" id="sort-bar">
+    <span class="lbl">Sort by</span>
+    <button class="sort-btn active" data-sort="disagreement">|disagreement|</button>
+    <button class="sort-btn" data-sort="price-desc">price ↓</button>
+    <button class="sort-btn" data-sort="price-asc">price ↑</button>
+    <button class="sort-btn" data-sort="brain-top">brain's top picks</button>
+    <button class="sort-btn" data-sort="biggest-gems">biggest gems ↑</button>
+  </div>
+  <div class="cards-grid" id="cards-grid">
   {% for c in cards_sorted %}
-    <div class="card">
+    <div class="card"
+         data-price="{{ c.actual_price }}"
+         data-rank-diff="{{ c.rank_diff or 0 }}"
+         data-brain-rank="{{ c.brain_rank or 9999 }}"
+         data-market-rank="{{ c.market_rank or 9999 }}"
+         data-implied-pct="{{ c.implied_pct or 0 }}">
       <div class="img-wrap">
         {% if c.image %}<img src="{{ c.image_url_rel }}" alt="{{ c.name }}" loading="lazy">{% endif %}
         {% if c.rank_diff is defined %}
@@ -327,8 +362,44 @@
     <li><strong>TRIBE v2 was not trained on Pokémon cards</strong> — it was trained on naturalistic media (videos, podcasts, images). Its brain predictions on a static card image are out-of-distribution.</li>
     <li><strong>Static-image artifact.</strong> Wrapping a still image as a 2-second silent video means the audio and language extractors see nothing. Only the V-JEPA2 visual stream contributes.</li>
   </ul>
-  <p>Built with <a href="https://github.com/facebookresearch/tribev2">TRIBE v2</a> (Meta, CC BY-NC). Pipeline source: see the <code>tribev2 demo</code> repo. This page contains no JavaScript.</p>
+  <p>Built with <a href="https://github.com/facebookresearch/tribev2">TRIBE v2</a> (Meta, CC BY-NC). Pipeline source: see the <code>tribev2 demo</code> repo. This page contains a single ~30-line vanilla JS snippet for sort reordering — no framework, no tracking, no analytics.</p>
 </section>
+
+<script>
+(function () {
+  var grid = document.getElementById('cards-grid');
+  var bar = document.getElementById('sort-bar');
+  if (!grid || !bar) return;
+  var cards = Array.from(grid.children);
+  var sorters = {
+    'disagreement':  function (a, b) { return Math.abs(b.d.rankDiff) - Math.abs(a.d.rankDiff); },
+    'price-desc':    function (a, b) { return b.d.price - a.d.price; },
+    'price-asc':     function (a, b) { return a.d.price - b.d.price; },
+    'brain-top':     function (a, b) { return a.d.brainRank - b.d.brainRank; },
+    'biggest-gems':  function (a, b) { return b.d.rankDiff - a.d.rankDiff; }
+  };
+  cards.forEach(function (c) {
+    c.d = {
+      price: parseFloat(c.dataset.price) || 0,
+      rankDiff: parseInt(c.dataset.rankDiff, 10) || 0,
+      brainRank: parseInt(c.dataset.brainRank, 10) || 9999,
+      marketRank: parseInt(c.dataset.marketRank, 10) || 9999,
+      impliedPct: parseFloat(c.dataset.impliedPct) || 0
+    };
+  });
+  bar.addEventListener('click', function (e) {
+    var btn = e.target.closest('.sort-btn');
+    if (!btn) return;
+    var key = btn.dataset.sort;
+    if (!sorters[key]) return;
+    bar.querySelectorAll('.sort-btn').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    var sorted = cards.slice().sort(sorters[key]);
+    var frag = document.createDocumentFragment();
+    sorted.forEach(function (c) { frag.appendChild(c); });
+    grid.appendChild(frag);
+  });
+})();
+</script>
 
 </main>
 
